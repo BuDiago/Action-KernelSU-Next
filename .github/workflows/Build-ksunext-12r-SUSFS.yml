@@ -1,68 +1,68 @@
-name: Build KernelSU Next SUSFS 12R
-on:
-  workflow_dispatch:
-    inputs:
-      CPU:
-        description: "分支"
-        required: true
-        default: 'sm8550'
-      FEIL:
-        description: "配置文件"
-        required: true
-        default: 'oneplus_12r_v'
-      CPUD:
-        description: "处理器代号"
-        required: true
-        default: 'kalama'
-      ANDROID_VERSION:
-        description: "内核安卓版本"
-        required: true
-        default: 'android13'
-      KERNEL_VERSION:
-        description: "内核版本"
-        required: true
-        default: '5.15'
+姓名:构建KernelSU Next SUSFS12R
+在……之上:
+workflow_dispatch:
+输入:
+中央处理器:
+描述:“”
+必需的:正确
+默认:'sm8550'
+Feil:
+描述:"配置文件"
+必需的:正确
+默认:'oneplus_12r_v'
+CPUD:
+描述:"处理器代号"
+必需的:正确
+默认:'卡拉马'
+Android_VERSION:
+描述:"内核安卓版本"
+必需的:正确
+默认:'android13'
+kernel_VERSION:
+描述:"内核版本"
+必需的:正确
+默认:'5.15'
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+工作:
+建立:
+run-on:ubuntu-最新
 
-    steps:
-      - name: Maximize build space
-        uses: easimon/maximize-build-space@master
-        with:
-          root-reserve-mb: 8192
-          temp-reserve-mb: 2048
-          remove-dotnet: 'true'
-          remove-android: 'true'
-          remove-haskell: 'true'
-          remove-codeql: 'true'
+步骤:
+-姓名:最大化构建空间
+uses:easimon/maximize-build-space@master
+和……一起:
+根储备-mb:8192
+temp-reserve-mb:2048
+remove-dotnet:'true'
+移除-android:'true'
+去除-haskell:'true'
+remove-codeql:'true'
 
-      - name: Configure Git
-        run: |
-         git config --global user.name "build"
-         git config --global user.email "263623064@qq.com"
+-姓名:配置Git
+跑:|
+git配置--global user.name"build"
+git配置-全局用户.电子邮件"263623064@qq.com"
 
-      - name: Install dependencies
-        run: |
-         sudo apt update && sudo apt upgrade -y
-         sudo apt install -y python3 git curl
+-姓名:安装相依性
+跑:|
+sudo apt更新&&sudo apt升级-y
+sudo apt install-y python3git curl
 
-      - name: Install repo tool
-        run: |
-         curl https://storage.googleapis.com/git-repo-downloads/repo > ~/repo
-         chmod a+x ~/repo
-         sudo mv ~/repo /usr/local/bin/repo
+-姓名:安装回购工具
+跑:|
+卷曲https://storage.googleapis.com/git-repo-downloads/repo>~/repo
+chmod a+x~/repo
+sudo mv~/repo/usr/local/bin/repo
 
-      - name: Initialize repo and sync
-        run: |
-         mkdir kernel_workspace && cd kernel_workspace
-         repo init -u https://github.com/OnePlusOSS/kernel_manifest.git -b refs/heads/oneplus/${{ github.event.inputs.CPU }} -m ${{ github.event.inputs.FEIL }}.xml --depth=1
-         repo sync
-         rm kernel_platform/common/android/abi_gki_protected_exports_* || echo "No protected exports!"
-         rm kernel_platform/msm-kernel/android/abi_gki_protected_exports_* || echo "No protected exports!"
-         sed -i 's/ -dirty//g' kernel_platform/common/scripts/setlocalversion
-         sed -i 's/ -dirty//g' kernel_platform/msm-kernel/scripts/setlocalversion
+-姓名:初始化回购并同步
+跑:|
+mkdir kernel_workspace&&cd kernel_workspace
+repo init-u https://github.com/OnePlusOSS/kernel_manifest.git-b refs/heads/oneplus/${{github。event.inputs.CPU}}-m${{github。event.inputs.FEIL}}.xml--depth=1
+回购同步
+RM kernel_platform/common/android/abi_gki_protected_exports_*||echo“没有受保护的出口！”
+RM kernel_platform/msm-kernel/android/abi_gki_protected_exports_*||echo“没有受保护的出口！”
+SED-i's/-dirty//g'kernel_platform/common/scripts/setlocalversion
+SED-i's/-dirty//g'kernel_platform/msm-kernel/scripts/setlocalversion
 
       - name: Set up KernelSU Next
 
